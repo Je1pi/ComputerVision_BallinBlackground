@@ -10,13 +10,28 @@ UPPER_WHITE = np.array([180, 50, 255])
 #----------------------------------------------------------------------------    
 # Configuração da porta serial    
 import serial
-s = serial.Serial(
-    port='COM1',
-    baudrate=9600,
-    bytesize=serial.EIGHTBITS, 
-    parity=serial.PARITY_NONE,   
-    stopbits=serial.STOPBITS_ONE 
-) #Olhar o Read.me em caso de dúvidas
+try:
+    s = serial.Serial(
+        port='/dev/ttyACM0',  # Porta comum para Arduino no Linux
+        baudrate=9600,
+        bytesize=serial.EIGHTBITS, 
+        parity=serial.PARITY_NONE,   
+        stopbits=serial.STOPBITS_ONE 
+    ) #Olhar o Read.me em caso de dúvidas
+    print("Conexão serial estabelecida em /dev/ttyACM0")
+except serial.SerialException:
+    try:
+        s = serial.Serial(
+            port='/dev/ttyUSB0',  # Porta alternativa para Arduino
+            baudrate=9600,
+            bytesize=serial.EIGHTBITS, 
+            parity=serial.PARITY_NONE,   
+            stopbits=serial.STOPBITS_ONE 
+        )
+        print("Conexão serial estabelecida em /dev/ttyUSB0")
+    except serial.SerialException:
+        print("Erro: Não foi possível conectar ao Arduino. Verifique a conexão.")
+        s = None
 # Configuração da câmera
 cap = cv2.VideoCapture(0)
 
@@ -67,7 +82,11 @@ while True:
         cv2.drawContours(frame, [melhor_contorno], -1, (255, 0, 0), 3)# desenha o contorno da bola (verde)
         cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 0), 2)# desenha o círculo mínimo que envolve o contorno(azul)
         cv2.circle(frame, (int(x), int(y)), 5, (0, 0, 255), -1)# desenha o centro da bola(ponto vermelho)
-        s.write(f"{int(x)},{int(y)}\n".encode('utf-8'))
+        
+        # Envia dados para o Arduino apenas se a conexão existir
+        if s is not None:
+            s.write(f"{int(x)},{int(y)}\n".encode('utf-8'))
+            
         print(f"Bola encontrada em: X={int(x)}, Y={int(y)} - Área: {int(area)} - Circularidade: {melhor_circularidade:.2f}")
 
     cv2.imshow('Detector de Bola', frame)
