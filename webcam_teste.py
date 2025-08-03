@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time
 import serial
+import platform
 
 #setado para branco
 #-----------------------(Matriz, Saturação, brilho)-----------------------
@@ -9,28 +10,44 @@ LOWER_WHITE = np.array([0, 0, 130])
 UPPER_WHITE = np.array([180, 50, 255])  
 #----------------------------------------------------------------------------    
 # Configuração da porta serial    
-try:
-    s = serial.Serial(
-        port='/dev/ttyACM0',  # Porta comum para Arduino no Linux
-        baudrate=9600,
-        bytesize=serial.EIGHTBITS, 
-        parity=serial.PARITY_NONE,   
-        stopbits=serial.STOPBITS_ONE 
-    ) #Olhar o Read.me em caso de dúvidas
-    print("Conexão serial estabelecida em /dev/ttyACM0")
-except serial.SerialException:
+s = None
+if platform.system() == "Windows":
     try:
         s = serial.Serial(
-            port='/dev/ttyUSB0',  # Porta alternativa para Arduino
+            port='COM1',  # Pode ser necessário ajustar
             baudrate=9600,
             bytesize=serial.EIGHTBITS, 
             parity=serial.PARITY_NONE,   
             stopbits=serial.STOPBITS_ONE 
         )
-        print("Conexão serial estabelecida em /dev/ttyUSB0")
+        print("Conexão serial estabelecida em COM1")
     except serial.SerialException:
-        print("Erro: Não foi possível conectar ao Arduino. Verifique a conexão.")
+        print("Erro: Não foi possível conectar ao Arduino na porta COM1. Verifique a conexão.")
         s = None
+else:
+    try:
+        s = serial.Serial(
+            port='/dev/ttyACM0',  # Porta comum para Arduino no Linux
+            baudrate=9600,
+            bytesize=serial.EIGHTBITS, 
+            parity=serial.PARITY_NONE,   
+            stopbits=serial.STOPBITS_ONE 
+        )
+        print("Conexão serial estabelecida em /dev/ttyACM0")
+    except serial.SerialException:
+        try:
+            s = serial.Serial(
+                port='/dev/ttyUSB0',  # Porta alternativa para Arduino
+                baudrate=9600,
+                bytesize=serial.EIGHTBITS, 
+                parity=serial.PARITY_NONE,   
+                stopbits=serial.STOPBITS_ONE 
+            )
+            print("Conexão serial estabelecida em /dev/ttyUSB0")
+        except serial.SerialException:
+            print("Erro: Não foi possível conectar ao Arduino. Verifique a conexão.")
+            s = None
+
 # Configuração da câmera
 cap = cv2.VideoCapture(0)
 

@@ -99,7 +99,9 @@ def main():
     else:
         print("Alguns problemas foram detectados:")
         if not all_deps_ok:
-            print("  - Instale as dependencias: pip install opencv-python pyserial numpy")
+            print("  - Instale as dependencias:")
+            print("    pip install -r requirements.txt")
+            print("    ou manualmente: pip install opencv-python pyserial numpy")
         if not camera_ok:
             print("  - Verifique se a webcam esta conectada e funcionando")
         if not ports_available:
