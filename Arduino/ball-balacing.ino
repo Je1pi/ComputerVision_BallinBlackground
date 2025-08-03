@@ -189,7 +189,6 @@ void returnToCenter() {
   servoX.write(currentServoX);
   servoY.write(currentServoY);
   
-  // Reset dos acumuladores PID
   integral_x = 0;
   integral_y = 0;
   last_error_x = 0;
@@ -243,7 +242,6 @@ void adjustPIDParameters() {
       Serial.println(value);
     }
     else if (command == "reset") {
-      // Reset do sistema
       currentServoX = SERVO_CENTER;
       currentServoY = SERVO_CENTER;
       servoX.write(SERVO_CENTER);
