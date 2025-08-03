@@ -9,7 +9,6 @@ LOWER_WHITE = np.array([0, 0, 130])
 UPPER_WHITE = np.array([180, 50, 255])  
 #----------------------------------------------------------------------------    
 # Configuração da porta serial    
-import serial
 try:
     s = serial.Serial(
         port='/dev/ttyACM0',  # Porta comum para Arduino no Linux
