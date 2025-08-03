@@ -72,10 +72,10 @@ pip install opencv-python pyserial numpy
 
 ### Pré-processamento da Máscara:
 ```python
-kernel = np.ones((5, 5), np.uint8) #cria um kernel 5x5 de uns
-mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)#expanse a area branca para tampar buracos
-mask = cv2.erode(mask, None, iterations=1)# Encolhe um pouco as áreas brancas
-mask = cv2.dilate(mask, None, iterations=2)#Expande as áreas brancas
+kernel = np.ones((5, 5), np.uint8)                        # Cria um kernel 5x5 de uns
+mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)    # Expanse a area branca para tampar buracos
+mask = cv2.erode(mask, None, iterations=1)                # Encolhe um pouco as áreas brancas
+mask = cv2.dilate(mask, None, iterations=2)               # Expande as áreas brancas
 ```
 
 **Explicação:**
@@ -119,9 +119,10 @@ sudo chmod 666 /dev/ttyACM0
 /
 ├── webcam_teste.py          # Detecção da bola via webcam
 ├── calibrador_hsv.py        # Ferramenta de calibração de cores
-├── README.md               # Este arquivo
+├── teste_sistema.py         # Teste do sistema completo
+├── README.md                # Este arquivo
 └── Arduino/
-    └── ball-and-plate.ino  # Controle PID e servos
+    └── ball-and-plate.ino   # Controle PID e servos
 ```
 
 ## 🔬 Fluxo do Sistema
